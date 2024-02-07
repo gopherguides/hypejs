@@ -28,7 +28,6 @@ var Element = /** @class */ (function () {
             tag += " ".concat(key, "=\"").concat(value, "\"");
         }
         tag += ">".concat(s, "</").concat(this.atom, ">");
-        // s = `< ${ this.atom } ${ this.attributes?.toString() }> ${ s } </${this.atom}>`
         return tag;
     };
     return Element;

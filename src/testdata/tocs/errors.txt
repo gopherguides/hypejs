@@ -1,0 +1,33 @@
+Errors
+Errors
+The "error" Interface
+Creating Errors with "errors.New"
+Creating Errors with "fmt.Errorf" (Recommended)
+Handling Errors
+Using Errors
+Panic
+What is a Panic?
+Raising a Panic
+Recovering From A Panic
+Capturing and Returning Panic Values
+Don't Panic
+Checking for Nil
+Maps
+Pointers
+Interfaces
+Functions
+Type Assertions
+Array/Slice Indexes
+Custom Errors
+Standard Errors
+Defining Custom Errors
+Wrapping and Unwrapping Errors
+Wrapping Errors
+Unwrapping Errors
+Unwrapping Custom Errors
+To Wrap Or Not to Wrap
+Errors As/Is
+As
+Is
+Stack Traces
+Summary

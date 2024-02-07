@@ -4,7 +4,7 @@ export class Heading extends Element {
     text: string;
     level: number = 1;
 
-    constructor(n: Heading) {
+    constructor(n: any) {
         super(n);
         this.text = n.text;
         this.level = n.level;

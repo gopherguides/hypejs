@@ -18,14 +18,14 @@ describe('visitAtom', () => {
             VisitAtom(atoms.Page, d, (n) => {
                 n.nodes = [new Text({
                     type: "hype.Text",
-                    text: `page-${found.length}`
+                    text: `page-${found.length}`,
                 })]
                 found.push(n)
             })
 
             expect(found.length).toEqual(9)
 
-            expect(d.toString()).toContain("page-6")
+            expect(d.toHtml()).toContain("page-6")
         });
 
         test('should find all the includes and pages', () => {

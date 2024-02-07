@@ -7,7 +7,7 @@ export class Snippet extends Element {
     start?: number;
     end?: number;
 
-    constructor(s: Snippet) {
+    constructor(s: any) {
         super(s);
 
         this.content = s.content;

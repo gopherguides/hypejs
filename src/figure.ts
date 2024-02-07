@@ -5,7 +5,7 @@ export class Figure extends Element {
     style?: string;
     section_id?: number;
 
-    constructor(f: Figure) {
+    constructor(f: any) {
         super(f);
 
         if (f.style === "") {

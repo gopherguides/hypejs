@@ -6,7 +6,7 @@ import { Heading } from "./heading";
 import { Include } from "./include";
 import { InlineCode } from "./inline_code";
 import { Link } from "./link";
-import { Node } from "./node";
+import type { Node } from "./node";
 import { Page } from "./page";
 import { Ref } from "./ref";
 import { UL } from "./ul";
@@ -19,6 +19,7 @@ import { FencedCode } from "./fenced_code";
 import { CmdResult } from "./cmd_result";
 import { SourceCode } from "./source_code";
 import { Image } from "./image";
+import { gotypes } from "./gotypes";
 
 export function ParseNodes(nodes: Node[] = []): Node[] {
     let ret: Node[] = [];
@@ -30,70 +31,70 @@ export function ParseNodes(nodes: Node[] = []): Node[] {
 
         n.nodes = ParseNodes(n.nodes);
         switch (n.type) {
-            case "*hype.Body":
-            case "*hype.Element":
-            case "*hype.Paragraph":
-            case "*hype.TD":
-            case "*hype.TH":
-            case "*hype.THead":
-            case "*hype.TR":
+            case gotypes.Body:
+            case gotypes.Element:
+            case gotypes.Paragraph:
+            case gotypes.TD:
+            case gotypes.TH:
+            case gotypes.THead:
+            case gotypes.TR:
                 ret.push(new Element(n))
                 break;
-            case "*hype.Page":
+            case gotypes.Page:
                 ret.push(new Page(n))
                 break;
-            case "hype.Text":
+            case gotypes.Text:
                 ret.push(new Text(n))
                 break;
-            case "hype.Heading":
+            case gotypes.Heading:
                 ret.push(new Heading(n))
                 break;
-            case "*hype.InlineCode":
+            case gotypes.InlineCode:
                 ret.push(new InlineCode(n))
                 break;
-            case "*hype.Include":
+            case gotypes.Include:
                 ret.push(new Include(n))
                 break;
-            case "*hype.Link":
+            case gotypes.Link:
                 ret.push(new Link(n))
                 break;
-            case "*hype.Figure":
+            case gotypes.Figure:
                 ret.push(new Figure(n))
                 break;
-            case "*hype.Table":
+            case gotypes.Table:
                 ret.push(new Table(n))
                 break;
-            case "*hype.Ref":
+            case gotypes.Ref:
                 ret.push(new Ref(n))
                 break;
-            case "*hype.Cmd":
+            case gotypes.Cmd:
                 ret.push(new Cmd(n))
                 break;
-            case "*hype.CmdResult":
+            case gotypes.CmdResult:
                 ret.push(new CmdResult(n))
                 break;
-            case "hype.Snippet":
+            case gotypes.Snippet:
                 ret.push(new Snippet(n))
                 break;
-            case "*hype.FencedCode":
+            case gotypes.FencedCode:
                 ret.push(new FencedCode(n))
                 break;
-            case "*hype.SourceCode":
+            case gotypes.SourceCode:
                 ret.push(new SourceCode(n))
                 break;
-            case "*hype.OL":
+            case gotypes.OL:
                 ret.push(new OL(n))
                 break;
-            case "*hype.UL":
+            case gotypes.UL:
                 ret.push(new UL(n))
                 break;
-            case "*hype.LI":
+            case gotypes.LI:
                 ret.push(new LI(n))
                 break;
-            case "*hype.Image":
+            case gotypes.Image:
                 ret.push(new Image(n))
                 break;
-            case "*hype.Figcaption":
+            case gotypes.Figcaption:
             case "*hype.FigCaption":
                 ret.push(new FigCaption(n))
                 break;

@@ -1,5 +1,5 @@
-import { Node } from './node';
-import { VisitNode } from './visit_node';
+import type { Node } from './node';
+import type { VisitNode } from './visit_node';
 
 export function VisitAtom(atom: string | string[], n: Node, fn: VisitNode) {
     if (n === undefined) {

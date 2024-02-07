@@ -18,8 +18,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Document = void 0;
 var element_1 = require("./element");
 var parse_nodes_1 = require("./parse_nodes");
-var hex_1 = require("./hex");
-var path = require('path');
 var Document = /** @class */ (function (_super) {
     __extends(Document, _super);
     function Document(el) {
@@ -33,7 +31,7 @@ var Document = /** @class */ (function (_super) {
         if (_this.file === undefined) {
             _this.file = "module.md";
         }
-        _this.id = (0, hex_1.ToHex)(path.join(_this.root, _this.file));
+        // this.id = ToHex(path.join(this.root, this.file));
         _this.nodes = (0, parse_nodes_1.ParseNodes)(el.nodes);
         return _this;
     }

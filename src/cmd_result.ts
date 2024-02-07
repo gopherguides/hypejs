@@ -10,7 +10,7 @@ export class CmdResult extends Element {
         stderr: string;
     }
 
-    constructor(cr: CmdResult) {
+    constructor(cr: any) {
         super(cr);
 
         this.result = cr.result;

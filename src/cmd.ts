@@ -5,7 +5,7 @@ export class Cmd extends Element {
     args?: string[];
     timeout?: string;
 
-    constructor(c: Cmd) {
+    constructor(c: any) {
         super(c);
 
         this.expected_exit = c.expected_exit;

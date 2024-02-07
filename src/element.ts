@@ -1,18 +1,19 @@
+import { gotypes } from "./gotypes";
 import type { Node } from "./node";
 
 export class Element implements Node {
     atom: string
     type: string;
     file?: string;
-    nodes?: Node[];
-    attributes?: {} = {}
+    nodes: Node[];
+    attributes: {} = {}
 
-    constructor(el: Element) {
+    constructor(el: any) {
         this.atom = el.atom;
         this.type = el.type;
         this.file = el.file;
-        this.nodes = el.nodes;
-        this.attributes = el.attributes;
+        this.nodes = el.nodes ? el.nodes : [];
+        this.attributes = el.attributes ? el.attributes : {};
 
         if (this.attributes === undefined) {
             this.attributes = {}
@@ -23,6 +24,8 @@ export class Element implements Node {
         let s: string = ""
 
         this.nodes?.forEach((n: any) => {
+            if (n === undefined)
+                return;
             s += n.toString();
         });
 
@@ -37,8 +40,19 @@ export class Element implements Node {
         }
         tag += `>${s}</${this.atom}>`
 
-        // s = `< ${ this.atom } ${ this.attributes?.toString() }> ${ s } </${this.atom}>`
-
         return tag;
     }
+
+    toHtml(): string {
+        return this.toString() + "\n";
+    }
+}
+
+export function NewElement(atom: string, attrs?: any): Element {
+    return new Element({
+        atom: atom,
+        nodes: [],
+        type: gotypes.Element,
+        attributes: attrs,
+    });
 }

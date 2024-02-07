@@ -1,10 +1,9 @@
 import { Element } from "./element";
-import { Node } from "./node";
+import type { Node } from "./node";
 import { ParseNodes } from "./parse_nodes";
 import { ToHex } from "./hex";
 
 
-var path = require('path');
 
 export class Document extends Element {
     id: string = "";
@@ -21,8 +20,6 @@ export class Document extends Element {
         section?: number;
     };
 
-    nodes?: Node[];
-
     constructor(el: any) {
         super(el);
         this.root = el.root;
@@ -33,7 +30,7 @@ export class Document extends Element {
             this.file = "module.md"
         }
 
-        this.id = ToHex(path.join(this.root, this.file));
+        this.id = el.id ? el.id : ToHex(this.root + this.file);
         this.nodes = ParseNodes(el.nodes);
     }
 
@@ -41,6 +38,14 @@ export class Document extends Element {
         let s: string = "";
         this.nodes?.forEach((n: any) => {
             s += n.toString();
+        });
+        return s;
+    }
+
+    toHtml(): string {
+        let s: string = "";
+        this.nodes?.forEach((n: any) => {
+            s += n.toHtml();
         });
         return s;
     }
