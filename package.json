@@ -2,18 +2,18 @@
     "name": "@gopherguides/hypejs",
     "version": "0.1.4",
     "author": "Gopher Guides <info@gopherguides.com>",
-    "description": "!kA TypeScript/JavaScript client for Hype JSON",
+    "description": "kA TypeScript/JavaScript client for Hype JSON",
     "license": "CC-BY-NC-SA-4.0",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/gopherguides/hypejs.git"
     },
-    "main": "build/index.js",
-    "types": "build/index.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
-        "build": "rimraf ./build && tsc",
+        "build": "rimraf ./dist && tsc && rollup -c",
         "start:dev": "npx nodemon",
-        "start": "npm run build && node build/index.js",
+        "start": "npm run build && node dist/index.js",
         "lint": "eslint . --ext .ts",
         "prettier-format": "run-script-os",
         "prettier-format:win32": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
@@ -23,6 +23,7 @@
         "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
         "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
         "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
+        "prepublishOnly": "tsc && rollup -c",
         "test": "jest",
         "test:dev": "jest --watchAll"
     },
