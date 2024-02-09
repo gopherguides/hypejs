@@ -1,14 +1,15 @@
 {
     "name": "@gopherguides/hypejs",
-    "version": "0.1.2",
+    "version": "0.1.4",
     "author": "Gopher Guides <info@gopherguides.com>",
-    "description": "A TypeScript/JavaScript client for Hype JSON",
+    "description": "!kA TypeScript/JavaScript client for Hype JSON",
     "license": "CC-BY-NC-SA-4.0",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/gopherguides/hypejs.git"
     },
-    "main": "./build/index.js",
+    "main": "build/index.js",
+    "types": "build/index.d.ts",
     "scripts": {
         "build": "rimraf ./build && tsc",
         "start:dev": "npx nodemon",
