@@ -1,5 +1,5 @@
-import { gotypes } from "./gotypes";
 import type { Node } from "./node";
+import { gotypes } from "./gotypes";
 
 export class Element implements Node {
     atom: string

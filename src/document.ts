@@ -1,9 +1,6 @@
 import { Element } from "./element";
-import type { Node } from "./node";
 import { ParseNodes } from "./parse_nodes";
-import { ToHex } from "./hex";
-
-
+import { v4 as uuidv4 } from 'uuid';
 
 export class Document extends Element {
     id: string = "";
@@ -30,7 +27,7 @@ export class Document extends Element {
             this.file = "module.md"
         }
 
-        this.id = el.id ? el.id : ToHex(this.root + this.file);
+        this.id = el.id ? el.id : uuidv4();
         this.nodes = ParseNodes(el.nodes);
     }
 
@@ -49,5 +46,4 @@ export class Document extends Element {
         });
         return s;
     }
-
 }

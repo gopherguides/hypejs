@@ -1,7 +1,7 @@
 import exp from "constants";
-import { Text } from "./text";
 import { Document } from "./document"
 import { Node } from "./node";
+import { Text } from "./text";
 import { VisitAtom } from "./visit_atom";
 import { atoms } from "./atoms"
 

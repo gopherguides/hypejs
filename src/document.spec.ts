@@ -46,6 +46,7 @@ describe('hype', () => {
     tcs.forEach(tc => {
         test(tc.name, () => {
             let d = new Document(tc.input)
+            expect(d.id).toBeDefined();
 
             expect(d.atom).toBeUndefined();
             expect(d.type).toEqual("*hype.Document");

@@ -1,24 +1,24 @@
+import type { Node } from "./node";
 import { Cmd } from "./cmd";
+import { CmdResult } from "./cmd_result";
 import { Element } from "./element";
+import { FencedCode } from "./fenced_code";
 import { FigCaption } from "./fig_caption";
 import { Figure } from "./figure";
 import { Heading } from "./heading";
+import { Image } from "./image";
 import { Include } from "./include";
 import { InlineCode } from "./inline_code";
+import { LI } from "./li";
 import { Link } from "./link";
-import type { Node } from "./node";
+import { OL } from "./ol";
 import { Page } from "./page";
 import { Ref } from "./ref";
-import { UL } from "./ul";
-import { LI } from "./li";
-import { OL } from "./ol";
 import { Snippet } from "./snippet";
+import { SourceCode } from "./source_code";
 import { Table } from "./table";
 import { Text } from "./text";
-import { FencedCode } from "./fenced_code";
-import { CmdResult } from "./cmd_result";
-import { SourceCode } from "./source_code";
-import { Image } from "./image";
+import { UL } from "./ul";
 import { gotypes } from "./gotypes";
 
 export function ParseNodes(nodes: Node[] = []): Node[] {
