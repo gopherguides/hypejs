@@ -1,8 +1,8 @@
 build:
 	npm run build
 
-test:
+test: build
 	npm run test:dev
 
-publish:
+publish: test
 	npm publish --access public
