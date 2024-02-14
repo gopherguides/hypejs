@@ -6,4 +6,5 @@ export declare class Snippet extends Element {
     start?: number;
     end?: number;
     constructor(s: any);
+    toString(): string;
 }

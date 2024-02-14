@@ -1,0 +1,15 @@
+{
+    "nodes": [
+        {
+            "type": "CustomTag",
+            "atom": "custom",
+            "file": "custom.md",
+            "nodes": []
+        }
+    ],
+    "parser": {},
+    "root": "testdata",
+    "title": "Custom Tags",
+    "type": "*hype.Document",
+    "filename": "module.md"
+}

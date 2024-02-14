@@ -10,6 +10,7 @@
     "esModuleInterop": true,
     "types": ["node", "jest"],
     "skipLibCheck": true,
+    "moduleResolution": "node",
     "declaration": true
   },
   "include": ["src/**/*"],

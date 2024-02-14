@@ -55,6 +55,35 @@ declare class Document extends Element {
     toHtml(): string;
 }
 
+declare class Toc extends Element {
+    ids: string[];
+    nodes: Node[];
+    constructor();
+    perform(doc: Document, gen?: () => string): void;
+}
+
+declare class Parser {
+    handlers: any;
+    constructor();
+    parse(data: any): Document;
+    private parseNodes;
+}
+
+declare class Module {
+    id: string;
+    dir: string;
+    filepath: string;
+    name: string;
+    parser: Parser;
+    doc: Document;
+    toc: Toc;
+    constructor(mod: any, parser?: Parser);
+    title(): string;
+    toString(): string;
+}
+
+declare function EmptyModule(): Module;
+
 declare class FencedCode extends Element {
     lang: string;
     constructor(fc: any);
@@ -124,10 +153,6 @@ declare class Page extends Element {
     constructor(n: any);
 }
 
-interface PostMarshaller {
-    postMarshal(doc: Document): void;
-}
-
 declare class Ref extends Element {
     constructor(r: any);
 }
@@ -139,6 +164,7 @@ declare class Snippet extends Element {
     start?: number;
     end?: number;
     constructor(s: any);
+    toString(): string;
 }
 
 declare class SourceCode extends Element {
@@ -150,16 +176,7 @@ declare class Table extends Element {
     constructor(t: any);
 }
 
-declare class Toc extends Element {
-    ids: string[];
-    nodes: Node[];
-    constructor();
-    perform(doc: Document, gen?: () => string): void;
-}
-
 type VisitNode = (n: Node) => void;
-
-declare function ParseNodes(nodes?: Node[]): Node[];
 
 declare function VisitAtom(atom: string | string[], n: Node, fn: VisitNode): void;
 
@@ -573,4 +590,4 @@ declare let gotypes: {
     UL: string;
 };
 
-export { Cmd, CmdResult, Document, Element, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, NewElement, NewLink, NewText, NewUL, type Node, OL, Page, ParseNodes, type PostMarshaller, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, type VisitNode, atoms, gotypes };
+export { Cmd, CmdResult, Document, Element, EmptyModule, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, NewElement, NewLink, NewText, NewUL, type Node, OL, Page, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, type VisitNode, atoms, gotypes };

@@ -16,4 +16,8 @@ export class Snippet extends Element {
         this.start = s.start;
         this.end = s.end;
     }
+
+    toString(): string {
+        return this.content
+    }
 }

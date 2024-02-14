@@ -3,5 +3,6 @@
     "parser": {},
     "root": "testdata",
     "title": "Simple",
-    "type": "*hype.Document"
+    "type": "*hype.Document",
+    "filename": "module.md"
 }

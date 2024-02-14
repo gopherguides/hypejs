@@ -6,34 +6,17 @@ import { Text } from "./text";
 import { Toc } from "./toc";
 import { VisitAtom } from "./visit_atom";
 import { atoms } from "./atoms"
+import { Parser } from "./parser";
 
 describe('toc', () => {
 
+    let p: Parser = new Parser();
     let data = require("./testdata/errors.json")
 
     describe('errors doc', () => {
 
-        // test("should build a toc", () => {
-        //     let doc = new Document(structuredClone(data))
-
-        //     let toc = new Toc(doc)
-        //     expect(toc.headings.length).toEqual(33)
-
-        //     let act: string = "";
-        //     toc.headings.forEach((n: Node) => {
-        //         act += NodesToHtml(n.nodes ? n.nodes : []) + "\n";
-        //     });
-        //     act = act.trim();
-
-
-        //     let buf = fs.readFileSync(__dirname + "/testdata/tocs/errors.txt", "utf-8")
-        //     let exp: string = buf.toString().trim();
-
-        //     expect(act).toEqual(exp);
-        // });
-
         test("should generate html", () => {
-            let doc = new Document(structuredClone(data))
+            let doc = p.parse(data);
 
             let toc = new Toc()
 

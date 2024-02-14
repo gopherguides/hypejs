@@ -4,15 +4,17 @@ import { Node } from "./node";
 import { Text } from "./text";
 import { VisitAtom } from "./visit_atom";
 import { atoms } from "./atoms"
+import { Parser } from "./parser";
 
 describe('visitAtom', () => {
 
+    let p: Parser = new Parser();
     let data = require("./testdata/errors.json")
 
     describe('errors doc', () => {
 
         test('should find all the pages', () => {
-            let d = new Document(structuredClone(data))
+            let d = p.parse(data);
 
             let found: Node[] = []
             VisitAtom(atoms.Page, d, (n) => {
@@ -29,7 +31,7 @@ describe('visitAtom', () => {
         });
 
         test('should find all the includes and pages', () => {
-            let d = new Document(structuredClone(data))
+            let d = p.parse(data);
 
             let found: Node[] = []
 
@@ -41,7 +43,7 @@ describe('visitAtom', () => {
         });
 
         test('should find all the headings', () => {
-            let d = new Document(structuredClone(data))
+            let d = p.parse(data);
 
             let found: Node[] = []
 

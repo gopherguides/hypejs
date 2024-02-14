@@ -1,6 +1,5 @@
-'use strict';
-
-var uuid = require('uuid');
+import { v4 } from 'uuid';
+import path from 'path-browserify';
 
 let gotypes = {
     Body: "*hype.Body",
@@ -49,7 +48,14 @@ class Element {
         (_a = this.nodes) === null || _a === void 0 ? void 0 : _a.forEach((n) => {
             if (n === undefined)
                 return;
-            s += n.toString();
+            if (Array.isArray(n)) {
+                n.forEach((n) => {
+                    s += n.toString();
+                });
+            }
+            else {
+                s += n.toString();
+            }
         });
         if (this.atom === undefined)
             return s;
@@ -90,32 +96,44 @@ class CmdResult extends Element {
     }
 }
 
-class FencedCode extends Element {
-    constructor(fc) {
-        super(fc);
-        this.lang = fc.lang;
-    }
-}
-
-class FigCaption extends Element {
-    constructor(fc) {
-        super(fc);
-    }
-}
-
-class Figure extends Element {
-    constructor(f) {
-        super(f);
-        if (f.style === "") {
-            f.style = "listing";
+class Document extends Element {
+    constructor(el) {
+        super(el);
+        this.id = "";
+        this.file = "module.md";
+        this.root = el.root;
+        this.title = el.title;
+        this.parser = el.parser;
+        this.file = el.file;
+        if (this.file === undefined) {
+            this.file = "module.md";
         }
-        if (f.pos < 1) {
-            f.pos = 1;
-        }
-        f.section_id ? f.section_id : 1;
-        this.pos = f.pos;
-        this.style = f.style;
-        this.section_id = f.section_id;
+        this.id = el.id ? el.id : v4();
+        this.nodes = el.nodes;
+        // this.nodes = ParseNodes(el.nodes);
+    }
+    toString() {
+        var _a;
+        let s = "";
+        (_a = this.nodes) === null || _a === void 0 ? void 0 : _a.forEach((n) => {
+            if (Array.isArray(n)) {
+                n.forEach((n) => {
+                    s += n.toString();
+                });
+            }
+            else {
+                s += n.toString();
+            }
+        });
+        return s;
+    }
+    toHtml() {
+        var _a;
+        let s = "";
+        (_a = this.nodes) === null || _a === void 0 ? void 0 : _a.forEach((n) => {
+            s += n.toHtml();
+        });
+        return s;
     }
 }
 
@@ -127,31 +145,6 @@ class Heading extends Element {
         this.level = n.level;
         if (this.level < 1)
             this.level = 1;
-    }
-}
-
-class Image extends Element {
-    constructor(img) {
-        super(img);
-    }
-}
-
-class Include extends Element {
-    constructor(el) {
-        super(el);
-        this.dir = el.dir;
-    }
-}
-
-class InlineCode extends Element {
-    constructor(t) {
-        super(t);
-    }
-}
-
-class LI extends Element {
-    constructor(li) {
-        super(li);
     }
 }
 
@@ -557,6 +550,118 @@ function NewLink(url, attrs) {
     });
 }
 
+function VisitAtom(atom, n, fn) {
+    var _a;
+    if (n === undefined) {
+        return;
+    }
+    (_a = n.nodes) === null || _a === void 0 ? void 0 : _a.forEach((e) => {
+        VisitAtom(atom, e, fn);
+    });
+    let atoms = [];
+    if (Array.isArray(atom)) {
+        atoms = atom;
+    }
+    else {
+        atoms.push(atom);
+    }
+    atoms.forEach((a) => {
+        if (a === n.atom) {
+            fn(n);
+        }
+    });
+    return;
+}
+
+class Toc extends Element {
+    constructor() {
+        super({
+            nodes: [],
+            atom: atoms.Ul,
+            type: gotypes.UL,
+            attributes: {
+                class: "hype-toc",
+            }
+        });
+        this.ids = [];
+        this.nodes = [];
+    }
+    perform(doc, gen) {
+        VisitAtom(atoms.Headings, doc, (n) => {
+            let h = new Heading(n);
+            // this.headings.push(h);
+            let id = gen ? gen() : newUUID();
+            this.ids.push(id);
+            let a = NewLink(`#${id}`);
+            let li = NewElement(atoms.Li, { class: `hype-toc-lvl-${h.level}` });
+            a.nodes = h.nodes;
+            li.nodes = [a];
+            this.nodes.push(li);
+            let nodes = n.nodes;
+            let b = NewElement(atoms.A);
+            b.attributes = { name: id };
+            n.nodes = [b, ...nodes];
+        });
+    }
+}
+function newUUID() {
+    return `heading-${v4()}`;
+}
+
+class FencedCode extends Element {
+    constructor(fc) {
+        super(fc);
+        this.lang = fc.lang;
+    }
+}
+
+class FigCaption extends Element {
+    constructor(fc) {
+        super(fc);
+    }
+}
+
+class Figure extends Element {
+    constructor(f) {
+        super(f);
+        if (f.style === "") {
+            f.style = "listing";
+        }
+        if (f.pos < 1) {
+            f.pos = 1;
+        }
+        f.section_id ? f.section_id : 1;
+        this.pos = f.pos;
+        this.style = f.style;
+        this.section_id = f.section_id;
+    }
+}
+
+class Image extends Element {
+    constructor(img) {
+        super(img);
+    }
+}
+
+class Include extends Element {
+    constructor(el) {
+        super(el);
+        this.dir = el.dir;
+    }
+}
+
+class InlineCode extends Element {
+    constructor(t) {
+        super(t);
+    }
+}
+
+class LI extends Element {
+    constructor(li) {
+        super(li);
+    }
+}
+
 class OL extends Element {
     constructor(ol) {
         super(ol);
@@ -583,6 +688,9 @@ class Snippet extends Element {
         this.name = s.name;
         this.start = s.start;
         this.end = s.end;
+    }
+    toString() {
+        return this.content;
     }
 }
 
@@ -634,230 +742,114 @@ function NewUL(attrs) {
     });
 }
 
-function ParseNodes(nodes = []) {
-    let ret = [];
-    nodes.forEach((n) => {
-        if (n == null) {
-            return;
-        }
-        n.nodes = ParseNodes(n.nodes);
-        switch (n.type) {
-            case gotypes.Body:
-            case gotypes.Element:
-            case gotypes.Paragraph:
-            case gotypes.TD:
-            case gotypes.TH:
-            case gotypes.THead:
-            case gotypes.TR:
-                ret.push(new Element(n));
-                break;
-            case gotypes.Page:
-                ret.push(new Page(n));
-                break;
-            case gotypes.Text:
-                ret.push(new Text(n));
-                break;
-            case gotypes.Heading:
-                ret.push(new Heading(n));
-                break;
-            case gotypes.InlineCode:
-                ret.push(new InlineCode(n));
-                break;
-            case gotypes.Include:
-                ret.push(new Include(n));
-                break;
-            case gotypes.Link:
-                ret.push(new Link(n));
-                break;
-            case gotypes.Figure:
-                ret.push(new Figure(n));
-                break;
-            case gotypes.Table:
-                ret.push(new Table(n));
-                break;
-            case gotypes.Ref:
-                ret.push(new Ref(n));
-                break;
-            case gotypes.Cmd:
-                ret.push(new Cmd(n));
-                break;
-            case gotypes.CmdResult:
-                ret.push(new CmdResult(n));
-                break;
-            case gotypes.Snippet:
-                ret.push(new Snippet(n));
-                break;
-            case gotypes.FencedCode:
-                ret.push(new FencedCode(n));
-                break;
-            case gotypes.SourceCode:
-                ret.push(new SourceCode(n));
-                break;
-            case gotypes.OL:
-                ret.push(new OL(n));
-                break;
-            case gotypes.UL:
-                ret.push(new UL(n));
-                break;
-            case gotypes.LI:
-                ret.push(new LI(n));
-                break;
-            case gotypes.Image:
-                ret.push(new Image(n));
-                break;
-            case gotypes.Figcaption:
-            case "*hype.FigCaption":
-                ret.push(new FigCaption(n));
-                break;
-            default:
-                if (Array.isArray(n)) {
-                    nodes = ParseNodes(n);
-                    ret.push(...nodes);
-                    break;
-                }
-                console.log("unknown node type", n.type, n);
-                throw new Error("Unknown node type: " + n.type);
-        }
-    });
-    return ret;
-}
-
-class Document extends Element {
-    constructor(el) {
-        super(el);
-        this.id = "";
-        this.file = "module.md";
-        this.root = el.root;
-        this.title = el.title;
-        this.parser = el.parser;
-        this.file = el.file;
-        if (this.file === undefined) {
-            this.file = "module.md";
-        }
-        this.id = el.id ? el.id : uuid.v4();
-        this.nodes = ParseNodes(el.nodes);
-    }
-    toString() {
-        var _a;
-        let s = "";
-        (_a = this.nodes) === null || _a === void 0 ? void 0 : _a.forEach((n) => {
-            s += n.toString();
-        });
-        return s;
-    }
-    toHtml() {
-        var _a;
-        let s = "";
-        (_a = this.nodes) === null || _a === void 0 ? void 0 : _a.forEach((n) => {
-            s += n.toHtml();
-        });
-        return s;
-    }
-}
-
-function VisitAtom(atom, n, fn) {
-    var _a;
-    if (n === undefined) {
-        return;
-    }
-    (_a = n.nodes) === null || _a === void 0 ? void 0 : _a.forEach((e) => {
-        VisitAtom(atom, e, fn);
-    });
-    let atoms = [];
-    if (Array.isArray(atom)) {
-        atoms = atom;
-    }
-    else {
-        atoms.push(atom);
-    }
-    atoms.forEach((a) => {
-        if (a === n.atom) {
-            fn(n);
-        }
-    });
-    return;
-    // func ByAtom[T ~string](nodes Nodes, want ...T) []AtomableNode {
-    // 	var res []AtomableNode
-    // 	for _, n := range nodes {
-    // 		an, ok := n.(AtomableNode)
-    // 		if !ok {
-    // 			res = append(res, ByAtom(n.Children(), want...)...)
-    // 			continue
-    // 		}
-    // 		for _, w := range want {
-    // 			if an.Atom().String() == string(w) {
-    // 				res = append(res, an)
-    // 				break
-    // 			}
-    // 		}
-    // 		res = append(res, ByAtom(n.Children(), want...)...)
-    // 	}
-    // 	return res
-    // }
-}
-
-class Toc extends Element {
+class Parser {
     constructor() {
-        super({
-            nodes: [],
-            atom: atoms.Ul,
-            type: gotypes.UL,
-            attributes: {
-                class: "hype-toc",
+        this.handlers = {};
+        this.handlers[gotypes.Body] = newElement;
+        this.handlers[gotypes.Element] = newElement;
+        this.handlers[gotypes.Paragraph] = newElement;
+        this.handlers[gotypes.TD] = newElement;
+        this.handlers[gotypes.TH] = newElement;
+        this.handlers[gotypes.THead] = newElement;
+        this.handlers[gotypes.TR] = newElement;
+        this.handlers[gotypes.CmdResult] = (n) => new CmdResult(n);
+        this.handlers[gotypes.Cmd] = (n) => new Cmd(n);
+        this.handlers[gotypes.FencedCode] = (n) => new FencedCode(n);
+        this.handlers[gotypes.Figcaption] = (n) => new FigCaption(n);
+        this.handlers[gotypes.Figure] = (n) => new Figure(n);
+        this.handlers[gotypes.Heading] = (n) => new Heading(n);
+        this.handlers[gotypes.Image] = (n) => new Image(n);
+        this.handlers[gotypes.Include] = (n) => new Include(n);
+        this.handlers[gotypes.InlineCode] = (n) => new InlineCode(n);
+        this.handlers[gotypes.LI] = (n) => new LI(n);
+        this.handlers[gotypes.Link] = (n) => new Link(n);
+        this.handlers[gotypes.OL] = (n) => new OL(n);
+        this.handlers[gotypes.Page] = (n) => new Page(n);
+        this.handlers[gotypes.Ref] = (n) => new Ref(n);
+        this.handlers[gotypes.Snippet] = (n) => new Snippet(n);
+        this.handlers[gotypes.SourceCode] = (n) => new SourceCode(n);
+        this.handlers[gotypes.Table] = (n) => new Table(n);
+        this.handlers[gotypes.Text] = (n) => new Text(n);
+        this.handlers[gotypes.UL] = (n) => new UL(n);
+    }
+    parse(data) {
+        data = structuredClone(data);
+        data.nodes = this.parseNodes(data.nodes);
+        return new Document(data);
+    }
+    parseNodes(nodes = []) {
+        let ret = [];
+        nodes.forEach((n) => {
+            if (n == null) {
+                return;
+            }
+            if (Array.isArray(n)) {
+                let nodes = this.parseNodes(n);
+                ret.push(...nodes);
+            }
+            else {
+                n.nodes = this.parseNodes(n.nodes);
+                let fn = this.handlers[n.type];
+                if (fn === undefined) {
+                    console.warn("unknown node type: " + n.type);
+                    fn = newElement;
+                }
+                ret.push(fn(n));
             }
         });
-        this.ids = [];
-        this.nodes = [];
-    }
-    perform(doc, gen) {
-        VisitAtom(atoms.Headings, doc, (n) => {
-            let h = new Heading(n);
-            // this.headings.push(h);
-            let id = gen ? gen() : newUUID();
-            this.ids.push(id);
-            let a = NewLink(`#${id}`);
-            let li = NewElement(atoms.Li, { class: `hype-toc-lvl-${h.level}` });
-            a.nodes = h.nodes;
-            li.nodes = [a];
-            this.nodes.push(li);
-            let nodes = n.nodes;
-            let b = NewElement(atoms.A);
-            b.attributes = { name: id };
-            n.nodes = [b, ...nodes];
-        });
+        return ret;
     }
 }
-function newUUID() {
-    return `heading-${uuid.v4()}`;
+function newElement(n) {
+    return new Element(n);
 }
 
-exports.Cmd = Cmd;
-exports.CmdResult = CmdResult;
-exports.Document = Document;
-exports.Element = Element;
-exports.FencedCode = FencedCode;
-exports.FigCaption = FigCaption;
-exports.Figure = Figure;
-exports.Heading = Heading;
-exports.Image = Image;
-exports.Include = Include;
-exports.InlineCode = InlineCode;
-exports.LI = LI;
-exports.Link = Link;
-exports.NewElement = NewElement;
-exports.NewLink = NewLink;
-exports.NewText = NewText;
-exports.NewUL = NewUL;
-exports.OL = OL;
-exports.Page = Page;
-exports.ParseNodes = ParseNodes;
-exports.Ref = Ref;
-exports.Snippet = Snippet;
-exports.SourceCode = SourceCode;
-exports.Table = Table;
-exports.Text = Text;
-exports.Toc = Toc;
-exports.UL = UL;
-exports.VisitAtom = VisitAtom;
-exports.atoms = atoms;
-exports.gotypes = gotypes;
+class Module {
+    constructor(mod, parser) {
+        this.id = "";
+        this.dir = "";
+        this.filepath = "";
+        this.name = "";
+        this.id = v4();
+        if (mod.id) {
+            this.id = mod.id;
+        }
+        if (mod.file === undefined) {
+            mod.file = "module.md";
+        }
+        if (mod.root === undefined) {
+            mod.root = "";
+        }
+        this.filepath = path.join(mod.root, mod.file);
+        this.dir = mod.root;
+        this.name = mod.file ? mod.file : "module.md";
+        this.parser = parser ? parser : new Parser();
+        this.doc = this.parser.parse(mod.doc ? mod.doc : mod);
+        this.toc = new Toc();
+        this.toc.perform(this.doc);
+    }
+    title() {
+        if (this.doc === undefined) {
+            return this.name;
+        }
+        return this.doc.title;
+    }
+    toString() {
+        if (this.doc === undefined) {
+            return "";
+        }
+        return this.doc.toString();
+    }
+}
+
+function EmptyModule() {
+    return new Module({
+        id: "",
+        doc: new Document({}),
+        dir: "",
+        filepath: "",
+        name: "",
+    });
+}
+
+export { Cmd, CmdResult, Document, Element, EmptyModule, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, NewElement, NewLink, NewText, NewUL, OL, Page, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, atoms, gotypes };

@@ -17,7 +17,14 @@ export class Element {
         (_a = this.nodes) === null || _a === void 0 ? void 0 : _a.forEach((n) => {
             if (n === undefined)
                 return;
-            s += n.toString();
+            if (Array.isArray(n)) {
+                n.forEach((n) => {
+                    s += n.toString();
+                });
+            }
+            else {
+                s += n.toString();
+            }
         });
         if (this.atom === undefined)
             return s;

@@ -1,5 +1,4 @@
 import { Element } from "./element";
-import { ParseNodes } from "./parse_nodes";
 import { v4 as uuidv4 } from 'uuid';
 export class Document extends Element {
     constructor(el) {
@@ -14,13 +13,21 @@ export class Document extends Element {
             this.file = "module.md";
         }
         this.id = el.id ? el.id : uuidv4();
-        this.nodes = ParseNodes(el.nodes);
+        this.nodes = el.nodes;
+        // this.nodes = ParseNodes(el.nodes);
     }
     toString() {
         var _a;
         let s = "";
         (_a = this.nodes) === null || _a === void 0 ? void 0 : _a.forEach((n) => {
-            s += n.toString();
+            if (Array.isArray(n)) {
+                n.forEach((n) => {
+                    s += n.toString();
+                });
+            }
+            else {
+                s += n.toString();
+            }
         });
         return s;
     }

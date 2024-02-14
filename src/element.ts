@@ -26,7 +26,14 @@ export class Element implements Node {
         this.nodes?.forEach((n: any) => {
             if (n === undefined)
                 return;
-            s += n.toString();
+
+            if (Array.isArray(n)) {
+                n.forEach((n: any) => {
+                    s += n.toString();
+                });
+            } else {
+                s += n.toString();
+            }
         });
 
         if (this.atom === undefined)

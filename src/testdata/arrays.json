@@ -14135,5 +14135,6 @@
   "section_id": 1,
   "snippets": {},
   "title": "Arrays, Slices, and Iteration",
-  "type": "*hype.Document"
+  "type": "*hype.Document",
+  "filename": "module.md"
 }
