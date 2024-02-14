@@ -19,7 +19,7 @@ jobs:
         run: go install github.com/gopherguides/hype/cmd/hype@latest
 
       - name: Run hype
-        run: pushd .hype;hype export -format=markdown -f module.md > ../README.md;popd
+        run: hype export -format=markdown -f module.md > ../README.md
 
       - name: Commit README back to the repo
         run: |-
