@@ -5,7 +5,7 @@ export class Modules {
         this.mods = {};
     }
     add(mod) {
-        this.mods[mod.file] = mod;
+        this.mods[mod.filepath] = mod;
         this.current = mod;
         return this.list();
     }

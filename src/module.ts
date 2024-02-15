@@ -7,39 +7,47 @@ import { Parser } from "./parser"
 
 export class Module {
     id: string = "";
-    file: string = "";
+    filepath: string = "";
 
     dir: string = ""; // calculated from file
     name: string = ""; // calculated from file
 
-    parser: Parser;
+    parser: Parser = new Parser();
     doc: Document;
     toc: Toc;
 
-    constructor(mod: any, parser?: Parser) {
-        this.id = uuid();
-        if (mod.id) {
-            this.id = mod.id;
+    constructor(doc: any, parser?: Parser) {
+        if (doc.id === undefined) {
+            doc.id = uuid();
+        }
+        this.id = doc.id;
+
+        if (doc.root === undefined) {
+            doc.root = "";
         }
 
-        if (mod.file === undefined) {
-            mod.file = "module.md"
+        if (doc.filename === undefined) {
+            doc.filename = "module.md";
         }
 
-        if (mod.root === undefined) {
-            mod.root = "";
-        }
+        this.filepath = path.join(doc.root, doc.filename);
+        this.dir = doc.root;
+        this.name = doc.filename;
 
-
-        this.file = path.join(mod.root, mod.file);
-        this.dir = mod.root
-        this.name = path.basename(mod.file)
-
-        this.parser = parser ? parser : new Parser();
-
-        this.doc = this.parser.parse(mod.doc ? mod.doc : mod);
+        this.doc = this.parser.parse(doc)
         this.toc = new Toc();
         this.toc.perform(this.doc);
+
+
+        // this.file = path.join(doc.root, doc.file);
+        // this.dir = doc.root
+        // this.name = path.basename(doc.file)
+
+        // this.parser = parser ? parser : new Parser();
+
+        // this.doc = this.parser.parse(doc.doc ? doc.doc : doc);
+        // this.toc = new Toc();
+        // this.toc.perform(this.doc);
     }
 
     title(): string {

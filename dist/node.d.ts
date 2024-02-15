@@ -2,7 +2,7 @@ export interface Node {
     atom: string;
     nodes: Node[];
     type: string;
-    file?: string;
+    filename?: string;
     toString(): string;
     toHtml(): string;
 }

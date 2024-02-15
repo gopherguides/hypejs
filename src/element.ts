@@ -4,14 +4,14 @@ import { gotypes } from "./gotypes";
 export class Element implements Node {
     atom: string
     type: string;
-    file?: string;
+    filename?: string;
     nodes: Node[];
     attributes: {} = {}
 
     constructor(el: any) {
         this.atom = el.atom;
         this.type = el.type;
-        this.file = el.file;
+        this.filename = el.file;
         this.nodes = el.nodes ? el.nodes : [];
         this.attributes = el.attributes ? el.attributes : {};
 

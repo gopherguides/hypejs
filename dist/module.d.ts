@@ -3,13 +3,13 @@ import { Toc } from "./toc";
 import { Parser } from "./parser";
 export declare class Module {
     id: string;
-    file: string;
+    filepath: string;
     dir: string;
     name: string;
     parser: Parser;
     doc: Document;
     toc: Toc;
-    constructor(mod: any, parser?: Parser);
+    constructor(doc: any, parser?: Parser);
     title(): string;
     toString(): string;
 }

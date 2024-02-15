@@ -11,17 +11,17 @@ describe("modules", () => {
             let mods: Modules = new Modules();
             expect(mods.list().length).toBe(0);
 
-            expect(mods.current.file).toBe("empty.md");
+            expect(mods.current.name).toBe("empty.md");
 
             let mod = new Module({
-                file: "test.md",
+                filename: "test.md",
                 id: "1234",
             });
 
             let list = mods.add(mod);
             expect(list.length).toBe(1);
 
-            expect(mods.current.file).toBe("test.md");
+            expect(mods.current.name).toBe("test.md");
         });
 
         test("should update a module in the list", () => {
@@ -29,7 +29,7 @@ describe("modules", () => {
             expect(mods.list().length).toBe(0);
 
             let mod = new Module({
-                filepath: "test.md",
+                filename: "test.md",
                 id: "1234",
             });
 

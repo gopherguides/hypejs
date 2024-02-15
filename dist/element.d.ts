@@ -2,7 +2,7 @@ import type { Node } from "./node";
 export declare class Element implements Node {
     atom: string;
     type: string;
-    file?: string;
+    filename?: string;
     nodes: Node[];
     attributes: {};
     constructor(el: any);

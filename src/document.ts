@@ -5,7 +5,7 @@ export class Document extends Element {
     id: string = "";
     root: string;
     title: string;
-    file: string = "module.md"
+    filename: string = "module.md"
 
     section_id?: number;
     snippets?: {};
@@ -21,10 +21,10 @@ export class Document extends Element {
         this.root = el.root;
         this.title = el.title;
         this.parser = el.parser;
-        this.file = el.file;
+        this.filename = el.file;
 
-        if (this.file === undefined) {
-            this.file = "module.md"
+        if (this.filename === undefined) {
+            this.filename = "module.md"
         }
 
         this.id = el.id ? el.id : uuidv4();

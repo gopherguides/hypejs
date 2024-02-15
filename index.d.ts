@@ -2,7 +2,7 @@ interface Node {
     atom: string;
     nodes: Node[];
     type: string;
-    file?: string;
+    filename?: string;
     toString(): string;
     toHtml(): string;
 }
@@ -10,7 +10,7 @@ interface Node {
 declare class Element implements Node {
     atom: string;
     type: string;
-    file?: string;
+    filename?: string;
     nodes: Node[];
     attributes: {};
     constructor(el: any);
@@ -42,7 +42,7 @@ declare class Document extends Element {
     id: string;
     root: string;
     title: string;
-    file: string;
+    filename: string;
     section_id?: number;
     snippets?: {};
     parser?: {
@@ -71,13 +71,13 @@ declare class Parser {
 
 declare class Module {
     id: string;
-    file: string;
+    filepath: string;
     dir: string;
     name: string;
     parser: Parser;
     doc: Document;
     toc: Toc;
-    constructor(mod: any, parser?: Parser);
+    constructor(doc: any, parser?: Parser);
     title(): string;
     toString(): string;
 }

@@ -4,7 +4,7 @@ export class Element {
         this.attributes = {};
         this.atom = el.atom;
         this.type = el.type;
-        this.file = el.file;
+        this.filename = el.file;
         this.nodes = el.nodes ? el.nodes : [];
         this.attributes = el.attributes ? el.attributes : {};
         if (this.attributes === undefined) {

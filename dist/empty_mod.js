@@ -12,7 +12,7 @@ export function EmptyModule() {
     mod.id = "";
     mod.doc.id = "";
     mod.dir = "";
-    mod.file = "empty.md";
+    mod.filepath = "empty.md";
     mod.name = "empty.md";
     return mod;
 }

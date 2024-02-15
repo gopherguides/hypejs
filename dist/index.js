@@ -35,7 +35,7 @@ class Element {
         this.attributes = {};
         this.atom = el.atom;
         this.type = el.type;
-        this.file = el.file;
+        this.filename = el.file;
         this.nodes = el.nodes ? el.nodes : [];
         this.attributes = el.attributes ? el.attributes : {};
         if (this.attributes === undefined) {
@@ -100,13 +100,13 @@ class Document extends Element {
     constructor(el) {
         super(el);
         this.id = "";
-        this.file = "module.md";
+        this.filename = "module.md";
         this.root = el.root;
         this.title = el.title;
         this.parser = el.parser;
-        this.file = el.file;
-        if (this.file === undefined) {
-            this.file = "module.md";
+        this.filename = el.file;
+        if (this.filename === undefined) {
+            this.filename = "module.md";
         }
         this.id = el.id ? el.id : v4();
         this.nodes = el.nodes;
@@ -804,28 +804,35 @@ function newElement(n) {
 }
 
 class Module {
-    constructor(mod, parser) {
+    constructor(doc, parser) {
         this.id = "";
-        this.file = "";
+        this.filepath = "";
         this.dir = ""; // calculated from file
         this.name = ""; // calculated from file
-        this.id = v4();
-        if (mod.id) {
-            this.id = mod.id;
+        this.parser = new Parser();
+        if (doc.id === undefined) {
+            doc.id = v4();
         }
-        if (mod.file === undefined) {
-            mod.file = "module.md";
+        this.id = doc.id;
+        if (doc.root === undefined) {
+            doc.root = "";
         }
-        if (mod.root === undefined) {
-            mod.root = "";
+        if (doc.filename === undefined) {
+            doc.filename = "module.md";
         }
-        this.file = path.join(mod.root, mod.file);
-        this.dir = mod.root;
-        this.name = path.basename(mod.file);
-        this.parser = parser ? parser : new Parser();
-        this.doc = this.parser.parse(mod.doc ? mod.doc : mod);
+        this.filepath = path.join(doc.root, doc.filename);
+        this.dir = doc.root;
+        this.name = doc.filename;
+        this.doc = this.parser.parse(doc);
         this.toc = new Toc();
         this.toc.perform(this.doc);
+        // this.file = path.join(doc.root, doc.file);
+        // this.dir = doc.root
+        // this.name = path.basename(doc.file)
+        // this.parser = parser ? parser : new Parser();
+        // this.doc = this.parser.parse(doc.doc ? doc.doc : doc);
+        // this.toc = new Toc();
+        // this.toc.perform(this.doc);
     }
     title() {
         if (this.doc === undefined) {
@@ -853,7 +860,7 @@ function EmptyModule() {
     mod.id = "";
     mod.doc.id = "";
     mod.dir = "";
-    mod.file = "empty.md";
+    mod.filepath = "empty.md";
     mod.name = "empty.md";
     return mod;
 }
@@ -864,7 +871,7 @@ class Modules {
         this.mods = {};
     }
     add(mod) {
-        this.mods[mod.file] = mod;
+        this.mods[mod.filepath] = mod;
         this.current = mod;
         return this.list();
     }

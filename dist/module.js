@@ -3,28 +3,35 @@ import { v4 as uuid } from "uuid";
 import path from "path-browserify";
 import { Parser } from "./parser";
 export class Module {
-    constructor(mod, parser) {
+    constructor(doc, parser) {
         this.id = "";
-        this.file = "";
+        this.filepath = "";
         this.dir = ""; // calculated from file
         this.name = ""; // calculated from file
-        this.id = uuid();
-        if (mod.id) {
-            this.id = mod.id;
+        this.parser = new Parser();
+        if (doc.id === undefined) {
+            doc.id = uuid();
         }
-        if (mod.file === undefined) {
-            mod.file = "module.md";
+        this.id = doc.id;
+        if (doc.root === undefined) {
+            doc.root = "";
         }
-        if (mod.root === undefined) {
-            mod.root = "";
+        if (doc.filename === undefined) {
+            doc.filename = "module.md";
         }
-        this.file = path.join(mod.root, mod.file);
-        this.dir = mod.root;
-        this.name = path.basename(mod.file);
-        this.parser = parser ? parser : new Parser();
-        this.doc = this.parser.parse(mod.doc ? mod.doc : mod);
+        this.filepath = path.join(doc.root, doc.filename);
+        this.dir = doc.root;
+        this.name = doc.filename;
+        this.doc = this.parser.parse(doc);
         this.toc = new Toc();
         this.toc.perform(this.doc);
+        // this.file = path.join(doc.root, doc.file);
+        // this.dir = doc.root
+        // this.name = path.basename(doc.file)
+        // this.parser = parser ? parser : new Parser();
+        // this.doc = this.parser.parse(doc.doc ? doc.doc : doc);
+        // this.toc = new Toc();
+        // this.toc.perform(this.doc);
     }
     title() {
         if (this.doc === undefined) {

@@ -9,7 +9,7 @@ export class Modules {
     constructor() { }
 
     add(mod: Module): Module[] {
-        this.mods[mod.file] = mod;
+        this.mods[mod.filepath] = mod;
         this.current = mod;
 
         return this.list();

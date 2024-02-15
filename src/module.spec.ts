@@ -1,4 +1,5 @@
 import exp from "constants";
+import path from "path-browserify"
 import { Document } from "./document"
 import { Module } from "./module"
 import { Toc } from "./toc"
@@ -14,6 +15,8 @@ describe('module', () => {
         expect(mod.id).toBeDefined();
         expect(mod.name).toEqual("module.md");
         expect(mod.title()).toEqual("Context");
+        expect(mod.dir).toEqual(data.root);
+        expect(mod.filepath).toEqual(path.join(data.root, data.filename));
 
         let doc: Document = mod.doc;
         expect(doc).toBeDefined();
