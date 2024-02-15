@@ -17,9 +17,15 @@ export class Module {
     toc: Toc;
 
     constructor(doc: any, parser?: Parser) {
+        if (doc.doc !== undefined) {
+            doc = doc.doc;
+        }
+
+
         if (doc.id === undefined) {
             doc.id = uuid();
         }
+
         this.id = doc.id;
 
         if (doc.root === undefined) {

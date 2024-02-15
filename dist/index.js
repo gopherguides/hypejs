@@ -810,6 +810,9 @@ class Module {
         this.dir = ""; // calculated from file
         this.name = ""; // calculated from file
         this.parser = new Parser();
+        if (doc.doc !== undefined) {
+            doc = doc.doc;
+        }
         if (doc.id === undefined) {
             doc.id = v4();
         }
