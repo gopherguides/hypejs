@@ -71,8 +71,8 @@ declare class Parser {
 
 declare class Module {
     id: string;
+    file: string;
     dir: string;
-    filepath: string;
     name: string;
     parser: Parser;
     doc: Document;
@@ -128,6 +128,15 @@ declare class Link extends Element {
     constructor(l: any);
 }
 declare function NewLink(url: string, attrs?: any): Link;
+
+declare class Modules {
+    current: Module;
+    private mods;
+    constructor();
+    add(mod: Module): Module[];
+    list(): Module[];
+    get(file: string): Module;
+}
 
 declare class Text {
     type: string;
@@ -590,4 +599,4 @@ declare let gotypes: {
     UL: string;
 };
 
-export { Cmd, CmdResult, Document, Element, EmptyModule, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, NewElement, NewLink, NewText, NewUL, type Node, OL, Page, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, type VisitNode, atoms, gotypes };
+export { Cmd, CmdResult, Document, Element, EmptyModule, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, Modules, NewElement, NewLink, NewText, NewUL, type Node, OL, Page, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, type VisitNode, atoms, gotypes };

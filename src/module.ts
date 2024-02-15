@@ -7,9 +7,10 @@ import { Parser } from "./parser"
 
 export class Module {
     id: string = "";
-    dir: string = "";
-    filepath: string = "";
-    name: string = "";
+    file: string = "";
+
+    dir: string = ""; // calculated from file
+    name: string = ""; // calculated from file
 
     parser: Parser;
     doc: Document;
@@ -29,9 +30,10 @@ export class Module {
             mod.root = "";
         }
 
-        this.filepath = path.join(mod.root, mod.file);
+
+        this.file = path.join(mod.root, mod.file);
         this.dir = mod.root
-        this.name = mod.file ? mod.file : "module.md";
+        this.name = path.basename(mod.file)
 
         this.parser = parser ? parser : new Parser();
 

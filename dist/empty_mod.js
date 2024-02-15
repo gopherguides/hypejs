@@ -1,11 +1,18 @@
 import { Module } from "./module";
 import { Document } from "./document";
 export function EmptyModule() {
-    return new Module({
+    let mod = new Module({
         id: "",
         doc: new Document({}),
         dir: "",
-        filepath: "",
-        name: "",
+        filepath: "empty.md",
+        name: "empty.md",
     });
+    mod.doc.title = "Empty Module";
+    mod.id = "";
+    mod.doc.id = "";
+    mod.dir = "";
+    mod.file = "empty.md";
+    mod.name = "empty.md";
+    return mod;
 }

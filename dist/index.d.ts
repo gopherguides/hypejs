@@ -13,6 +13,7 @@ export { InlineCode } from "./inline_code";
 export { LI } from "./li";
 export { Link } from "./link";
 export { Module } from "./module";
+export { Modules } from "./modules";
 export { NewElement } from "./element";
 export { NewLink } from "./link";
 export { NewText } from "./text";

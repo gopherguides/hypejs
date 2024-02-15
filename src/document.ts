@@ -29,8 +29,6 @@ export class Document extends Element {
 
         this.id = el.id ? el.id : uuidv4();
         this.nodes = el.nodes;
-        // this.nodes = ParseNodes(el.nodes);
-
     }
 
     toString(): string {

@@ -110,7 +110,6 @@ class Document extends Element {
         }
         this.id = el.id ? el.id : v4();
         this.nodes = el.nodes;
-        // this.nodes = ParseNodes(el.nodes);
     }
     toString() {
         var _a;
@@ -807,9 +806,9 @@ function newElement(n) {
 class Module {
     constructor(mod, parser) {
         this.id = "";
-        this.dir = "";
-        this.filepath = "";
-        this.name = "";
+        this.file = "";
+        this.dir = ""; // calculated from file
+        this.name = ""; // calculated from file
         this.id = v4();
         if (mod.id) {
             this.id = mod.id;
@@ -820,9 +819,9 @@ class Module {
         if (mod.root === undefined) {
             mod.root = "";
         }
-        this.filepath = path.join(mod.root, mod.file);
+        this.file = path.join(mod.root, mod.file);
         this.dir = mod.root;
-        this.name = mod.file ? mod.file : "module.md";
+        this.name = path.basename(mod.file);
         this.parser = parser ? parser : new Parser();
         this.doc = this.parser.parse(mod.doc ? mod.doc : mod);
         this.toc = new Toc();
@@ -843,13 +842,38 @@ class Module {
 }
 
 function EmptyModule() {
-    return new Module({
+    let mod = new Module({
         id: "",
         doc: new Document({}),
         dir: "",
-        filepath: "",
-        name: "",
+        filepath: "empty.md",
+        name: "empty.md",
     });
+    mod.doc.title = "Empty Module";
+    mod.id = "";
+    mod.doc.id = "";
+    mod.dir = "";
+    mod.file = "empty.md";
+    mod.name = "empty.md";
+    return mod;
 }
 
-export { Cmd, CmdResult, Document, Element, EmptyModule, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, NewElement, NewLink, NewText, NewUL, OL, Page, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, atoms, gotypes };
+class Modules {
+    constructor() {
+        this.current = EmptyModule();
+        this.mods = {};
+    }
+    add(mod) {
+        this.mods[mod.file] = mod;
+        this.current = mod;
+        return this.list();
+    }
+    list() {
+        return Object.values(this.mods);
+    }
+    get(file) {
+        return this.mods[file];
+    }
+}
+
+export { Cmd, CmdResult, Document, Element, EmptyModule, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, Modules, NewElement, NewLink, NewText, NewUL, OL, Page, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, atoms, gotypes };

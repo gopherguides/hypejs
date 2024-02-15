@@ -3,8 +3,8 @@ import { Toc } from "./toc";
 import { Parser } from "./parser";
 export declare class Module {
     id: string;
+    file: string;
     dir: string;
-    filepath: string;
     name: string;
     parser: Parser;
     doc: Document;

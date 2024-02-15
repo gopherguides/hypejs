@@ -5,9 +5,9 @@ import { Parser } from "./parser";
 export class Module {
     constructor(mod, parser) {
         this.id = "";
-        this.dir = "";
-        this.filepath = "";
-        this.name = "";
+        this.file = "";
+        this.dir = ""; // calculated from file
+        this.name = ""; // calculated from file
         this.id = uuid();
         if (mod.id) {
             this.id = mod.id;
@@ -18,9 +18,9 @@ export class Module {
         if (mod.root === undefined) {
             mod.root = "";
         }
-        this.filepath = path.join(mod.root, mod.file);
+        this.file = path.join(mod.root, mod.file);
         this.dir = mod.root;
-        this.name = mod.file ? mod.file : "module.md";
+        this.name = path.basename(mod.file);
         this.parser = parser ? parser : new Parser();
         this.doc = this.parser.parse(mod.doc ? mod.doc : mod);
         this.toc = new Toc();
