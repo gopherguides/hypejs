@@ -1,6 +1,6 @@
 {
     "name": "@gopherguides/hypejs",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "author": "Gopher Guides <info@gopherguides.com>",
     "description": "kA TypeScript/JavaScript client for Hype JSON",
     "license": "CC-BY-NC-SA-4.0",

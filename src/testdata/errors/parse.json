@@ -1,0 +1,6 @@
+{
+    "err": "pre parse error: [hype.PreParseFn]: html/template: ends in a non-text context: {stateTag delimNone urlPartNone jsCtxRegexp attrNone elementNone \u003cnil\u003e}",
+    "filename": "module.md",
+    "root": "testdata/includes/broken",
+    "type": "hype.ParseError"
+}

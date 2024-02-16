@@ -1,8 +1,10 @@
-import { Document } from "./document";
 import type { Node } from "./node";
 import { Cmd } from "./cmd";
+import { CmdError } from "./cmd_error";
 import { CmdResult } from "./cmd_result";
+import { Document } from "./document";
 import { Element } from "./element";
+import { ExecuteError } from "./execute_error";
 import { FencedCode } from "./fenced_code";
 import { FigCaption } from "./fig_caption";
 import { Figure } from "./figure";
@@ -14,6 +16,7 @@ import { LI } from "./li";
 import { Link } from "./link";
 import { OL } from "./ol";
 import { Page } from "./page";
+import { ParseError } from "./parse_error";
 import { Ref } from "./ref";
 import { Snippet } from "./snippet";
 import { SourceCode } from "./source_code";
@@ -65,6 +68,24 @@ export class Parser {
         return new Document(data);
     }
 
+    parseError(data: any): any {
+        switch (data.type) {
+            case gotypes.ExecuteError:
+                return new ExecuteError(data, this);
+            case gotypes.CmdError:
+                return new CmdError(data, this);
+            case gotypes.ParseError:
+                return new ParseError(data, this);
+            default:
+                if (data.type === undefined) {
+                    return data;
+                }
+
+                console.warn("parseError: unknown type: ", data.type)
+                return data
+        }
+    }
+
     private parseNodes(nodes: Node[] = []): Node[] {
         let ret: Node[] = [];
 
@@ -92,8 +113,8 @@ export class Parser {
         });
 
         return ret;
-
     }
+
 }
 
 function newElement(n: any): Element {

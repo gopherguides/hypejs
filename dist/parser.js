@@ -1,7 +1,9 @@
-import { Document } from "./document";
 import { Cmd } from "./cmd";
+import { CmdError } from "./cmd_error";
 import { CmdResult } from "./cmd_result";
+import { Document } from "./document";
 import { Element } from "./element";
+import { ExecuteError } from "./execute_error";
 import { FencedCode } from "./fenced_code";
 import { FigCaption } from "./fig_caption";
 import { Figure } from "./figure";
@@ -13,6 +15,7 @@ import { LI } from "./li";
 import { Link } from "./link";
 import { OL } from "./ol";
 import { Page } from "./page";
+import { ParseError } from "./parse_error";
 import { Ref } from "./ref";
 import { Snippet } from "./snippet";
 import { SourceCode } from "./source_code";
@@ -55,6 +58,22 @@ export class Parser {
         data = structuredClone(data);
         data.nodes = this.parseNodes(data.nodes);
         return new Document(data);
+    }
+    parseError(data) {
+        switch (data.type) {
+            case gotypes.ExecuteError:
+                return new ExecuteError(data, this);
+            case gotypes.CmdError:
+                return new CmdError(data, this);
+            case gotypes.ParseError:
+                return new ParseError(data, this);
+            default:
+                if (data.type === undefined) {
+                    return data;
+                }
+                console.warn("parseError: unknown type: ", data.type);
+                return data;
+        }
     }
     parseNodes(nodes = []) {
         let ret = [];

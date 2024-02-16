@@ -4,12 +4,15 @@ import path from 'path-browserify';
 let gotypes = {
     Body: "*hype.Body",
     Cmd: "*hype.Cmd",
+    CmdError: "hype.CmdError",
     CmdResult: "*hype.CmdResult",
     Element: "*hype.Element",
+    ExecuteError: "hype.ExecuteError",
     FencedCode: "*hype.FencedCode",
     Figcaption: "*hype.Figcaption",
     Figure: "*hype.Figure",
     Heading: "hype.Heading",
+    HypeError: "hype.HypeError",
     Image: "*hype.Image",
     Include: "*hype.Include",
     InlineCode: "*hype.InlineCode",
@@ -18,7 +21,9 @@ let gotypes = {
     OL: "*hype.OL",
     Page: "*hype.Page",
     Paragraph: "*hype.Paragraph",
+    ParseError: "hype.ParseError",
     Ref: "*hype.Ref",
+    RunError: "clam.RunError",
     Snippet: "hype.Snippet",
     SourceCode: "*hype.SourceCode",
     TD: "*hype.TD",
@@ -607,6 +612,37 @@ function newUUID() {
     return `heading-${v4()}`;
 }
 
+class CmdError {
+    constructor(data, parser) {
+        this.args = data.args;
+        this.env = data.env;
+        this.exit = data.exit;
+        this.filename = data.filename;
+        this.output = data.output;
+        this.root = data.root;
+        parser = parser || new Parser();
+        this.err = parser.parseError(data.err);
+    }
+}
+// args: [ 'ech', 'Hello World' ],
+// env: [
+// ],
+// err: 'exec: "ech": executable file not found in $PATH',
+// exit: -1,
+// filename: 'usage.md',
+// output: '',
+// root: '/Users/markbates/Library/CloudStorage/Dropbox/dev/guides/hypeviewer',
+// type: 'hype.CmdError'
+
+class ExecuteError {
+    constructor(data, parser) {
+        this.filename = data.filename;
+        this.root = data.root;
+        parser = parser || new Parser();
+        this.err = parser.parseError(data.err);
+    }
+}
+
 class FencedCode extends Element {
     constructor(fc) {
         super(fc);
@@ -670,6 +706,15 @@ class OL extends Element {
 class Page extends Element {
     constructor(n) {
         super(n);
+    }
+}
+
+class ParseError {
+    constructor(data, parser) {
+        this.filename = data.filename;
+        this.root = data.root;
+        parser = parser || new Parser();
+        this.err = parser.parseError(data.err);
     }
 }
 
@@ -775,6 +820,22 @@ class Parser {
         data = structuredClone(data);
         data.nodes = this.parseNodes(data.nodes);
         return new Document(data);
+    }
+    parseError(data) {
+        switch (data.type) {
+            case gotypes.ExecuteError:
+                return new ExecuteError(data, this);
+            case gotypes.CmdError:
+                return new CmdError(data, this);
+            case gotypes.ParseError:
+                return new ParseError(data, this);
+            default:
+                if (data.type === undefined) {
+                    return data;
+                }
+                console.warn("parseError: unknown type: ", data.type);
+                return data;
+        }
     }
     parseNodes(nodes = []) {
         let ret = [];

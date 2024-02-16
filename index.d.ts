@@ -66,6 +66,7 @@ declare class Parser {
     handlers: any;
     constructor();
     parse(data: any): Document;
+    parseError(data: any): any;
     private parseNodes;
 }
 
@@ -573,12 +574,15 @@ declare let atoms: {
 declare let gotypes: {
     Body: string;
     Cmd: string;
+    CmdError: string;
     CmdResult: string;
     Element: string;
+    ExecuteError: string;
     FencedCode: string;
     Figcaption: string;
     Figure: string;
     Heading: string;
+    HypeError: string;
     Image: string;
     Include: string;
     InlineCode: string;
@@ -587,7 +591,9 @@ declare let gotypes: {
     OL: string;
     Page: string;
     Paragraph: string;
+    ParseError: string;
     Ref: string;
+    RunError: string;
     Snippet: string;
     SourceCode: string;
     TD: string;

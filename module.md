@@ -1,5 +1,5 @@
 # HypeJS
 
-asdfasdfa
+asdfasdf
 
-<code src="src/document.ts"></code>
+<include src="usage.md"></include>
