@@ -26,18 +26,6 @@ declare class Cmd extends Element {
     constructor(c: any);
 }
 
-declare class CmdResult extends Element {
-    result: {
-        args: string[];
-        dir: string;
-        stdout: string;
-        duration: number;
-        exit: number;
-        stderr: string;
-    };
-    constructor(cr: any);
-}
-
 declare class Document extends Element {
     id: string;
     root: string;
@@ -55,19 +43,45 @@ declare class Document extends Element {
     toHtml(): string;
 }
 
+type NodeParseFn = (n: any) => Node[];
+declare class Parser {
+    handlers: {
+        [key: string]: NodeParseFn;
+    };
+    constructor();
+    parse(data: any): Document;
+    parseError(data: any): any;
+    private parseNodes;
+}
+
+declare class CmdError {
+    args: string[];
+    env: string[];
+    error: any;
+    exit: number;
+    filename: string;
+    output: string;
+    root: string;
+    constructor(data: any, parser?: Parser);
+}
+
+declare class CmdResult extends Element {
+    result: {
+        args: string[];
+        dir: string;
+        stdout: string;
+        duration: number;
+        exit: number;
+        stderr: string;
+    };
+    constructor(cr: any);
+}
+
 declare class Toc extends Element {
     ids: string[];
     nodes: Node[];
     constructor();
     perform(doc: Document, gen?: () => string): void;
-}
-
-declare class Parser {
-    handlers: any;
-    constructor();
-    parse(data: any): Document;
-    parseError(data: any): any;
-    private parseNodes;
 }
 
 declare class Module {
@@ -84,6 +98,13 @@ declare class Module {
 }
 
 declare function EmptyModule(): Module;
+
+declare class ExecuteError {
+    filename: string;
+    root: string;
+    error: any;
+    constructor(data: any, parser?: Parser);
+}
 
 declare class FencedCode extends Element {
     lang: string;
@@ -161,6 +182,13 @@ declare class OL extends Element {
 
 declare class Page extends Element {
     constructor(n: any);
+}
+
+declare class ParseError {
+    filename: string;
+    root: string;
+    error: any;
+    constructor(data: any, parser?: Parser);
 }
 
 declare class Ref extends Element {
@@ -572,37 +600,61 @@ declare let atoms: {
 };
 
 declare let gotypes: {
+    Atom: string;
+    Atomable: string;
+    AtomableNode: string;
+    AttrNode: string;
+    Attributes: string;
     Body: string;
     Cmd: string;
-    CmdError: string;
     CmdResult: string;
+    Comment: string;
+    Document: string;
+    Documents: string;
     Element: string;
-    ExecuteError: string;
+    EmptyableNode: string;
+    ExecutableNode: string;
     FencedCode: string;
     Figcaption: string;
     Figure: string;
+    HTMLNode: string;
     Heading: string;
-    HypeError: string;
     Image: string;
     Include: string;
     InlineCode: string;
     LI: string;
     Link: string;
+    MDNode: string;
+    Metadata: string;
+    Node: string;
+    Nodes: string;
+    Now: string;
     OL: string;
     Page: string;
     Paragraph: string;
-    ParseError: string;
+    Parser: string;
+    PostExecuter: string;
+    PostParser: string;
+    PreExecuter: string;
+    PreParser: string;
+    PreParsers: string;
     Ref: string;
-    RunError: string;
+    RefProcessor: string;
     Snippet: string;
+    Snippets: string;
     SourceCode: string;
     TD: string;
     TH: string;
     THead: string;
     TR: string;
     Table: string;
+    Tag: string;
+    Tags: string;
     Text: string;
+    ToC: string;
     UL: string;
+    Var: string;
+    WaitGrouper: string;
 };
 
-export { Cmd, CmdResult, Document, Element, EmptyModule, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, Modules, NewElement, NewLink, NewText, NewUL, type Node, OL, Page, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, type VisitNode, atoms, gotypes };
+export { Cmd, CmdError, CmdResult, Document, Element, EmptyModule, ExecuteError, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, Modules, NewElement, NewLink, NewText, NewUL, type Node, OL, Page, ParseError, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, type VisitNode, atoms, gotypes };

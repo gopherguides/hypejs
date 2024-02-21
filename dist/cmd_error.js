@@ -8,7 +8,7 @@ export class CmdError {
         this.output = data.output;
         this.root = data.root;
         parser = parser || new Parser();
-        this.err = parser.parseError(data.err);
+        this.error = parser.parseError(data.err);
     }
 }
 // args: [ 'ech', 'Hello World' ],

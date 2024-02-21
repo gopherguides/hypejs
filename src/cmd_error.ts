@@ -4,7 +4,7 @@ import { Parser } from "./parser";
 export class CmdError {
     args: string[];
     env: string[];
-    err: any;
+    error: any;
     exit: number;
     filename: string;
     output: string;
@@ -19,7 +19,7 @@ export class CmdError {
         this.root = data.root;
 
         parser = parser || new Parser();
-        this.err = parser.parseError(data.err);
+        this.error = parser.parseError(data.err);
     }
 }
 // args: [ 'ech', 'Hello World' ],

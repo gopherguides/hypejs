@@ -1,5 +1,6 @@
 import exp from "constants";
 import { Parser } from "./parser";
+import { gotypes } from "./gotypes";
 
 describe('document', () => {
 
@@ -13,33 +14,18 @@ describe('document', () => {
 
         let tcs: tc[] = [
             {
-                name: "arrays",
-                input: require('./testdata/arrays.json'),
-                title: "Arrays, Slices, and Iteration"
-            },
-            {
                 name: "errors",
-                input: require('./testdata/errors.json'),
+                input: require('./testdata/09-errors.json'),
                 title: "Errors",
             },
             {
                 name: "generics",
-                input: require('./testdata/generics.json'),
+                input: require('./testdata/10-generics.json'),
                 title: "Generics",
             },
             {
-                name: "files",
-                input: require('./testdata/files.json'),
-                title: "Working With Files",
-            },
-            {
-                name: "channels",
-                input: require('./testdata/channels.json'),
-                title: "Channels",
-            },
-            {
                 name: "context",
-                input: require('./testdata/context.json'),
+                input: require('./testdata/12-context.json'),
                 title: "Context",
             }
         ]
@@ -51,7 +37,7 @@ describe('document', () => {
                 expect(d.id).toBeDefined();
 
                 expect(d.atom).toBeUndefined();
-                expect(d.type).toEqual("*hype.Document");
+                expect(d.type).toEqual(gotypes.Document);
                 expect(d.title).toEqual(tc.title);
                 expect(d.nodes?.length).toEqual(1);
 

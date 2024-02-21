@@ -2,37 +2,73 @@ import { v4 } from 'uuid';
 import path from 'path-browserify';
 
 let gotypes = {
-    Body: "*hype.Body",
-    Cmd: "*hype.Cmd",
-    CmdError: "hype.CmdError",
-    CmdResult: "*hype.CmdResult",
-    Element: "*hype.Element",
-    ExecuteError: "hype.ExecuteError",
-    FencedCode: "*hype.FencedCode",
-    Figcaption: "*hype.Figcaption",
-    Figure: "*hype.Figure",
+    Atom: "hype.Atom",
+    Atomable: "hype.Atomable",
+    AtomableNode: "hype.AtomableNode",
+    AttrNode: "hype.AttrNode",
+    Attributes: "hype.Attributes",
+    Body: "hype.Body",
+    Cmd: "hype.Cmd",
+    CmdResult: "hype.CmdResult",
+    Comment: "hype.Comment",
+    Document: "hype.Document",
+    Documents: "hype.Documents",
+    Element: "hype.Element",
+    EmptyableNode: "hype.EmptyableNode",
+    ExecutableNode: "hype.ExecutableNode",
+    FencedCode: "hype.FencedCode",
+    Figcaption: "hype.Figcaption",
+    Figure: "hype.Figure",
+    HTMLNode: "hype.HTMLNode",
     Heading: "hype.Heading",
-    HypeError: "hype.HypeError",
-    Image: "*hype.Image",
-    Include: "*hype.Include",
-    InlineCode: "*hype.InlineCode",
-    LI: "*hype.LI",
-    Link: "*hype.Link",
-    OL: "*hype.OL",
-    Page: "*hype.Page",
-    Paragraph: "*hype.Paragraph",
-    ParseError: "hype.ParseError",
-    Ref: "*hype.Ref",
-    RunError: "clam.RunError",
+    Image: "hype.Image",
+    Include: "hype.Include",
+    InlineCode: "hype.InlineCode",
+    LI: "hype.LI",
+    Link: "hype.Link",
+    MDNode: "hype.MDNode",
+    Metadata: "hype.Metadata",
+    Node: "hype.Node",
+    Nodes: "hype.Nodes",
+    Now: "hype.Now",
+    OL: "hype.OL",
+    Page: "hype.Page",
+    Paragraph: "hype.Paragraph",
+    Parser: "hype.Parser",
+    PostExecuter: "hype.PostExecuter",
+    PostParser: "hype.PostParser",
+    PreExecuter: "hype.PreExecuter",
+    PreParser: "hype.PreParser",
+    PreParsers: "hype.PreParsers",
+    Ref: "hype.Ref",
+    RefProcessor: "hype.RefProcessor",
     Snippet: "hype.Snippet",
-    SourceCode: "*hype.SourceCode",
-    TD: "*hype.TD",
-    TH: "*hype.TH",
-    THead: "*hype.THead",
-    TR: "*hype.TR",
-    Table: "*hype.Table",
+    Snippets: "hype.Snippets",
+    SourceCode: "hype.SourceCode",
+    TD: "hype.TD",
+    TH: "hype.TH",
+    THead: "hype.THead",
+    TR: "hype.TR",
+    Table: "hype.Table",
+    Tag: "hype.Tag",
+    Tags: "hype.Tags",
     Text: "hype.Text",
-    UL: "*hype.UL",
+    ToC: "hype.ToC",
+    UL: "hype.UL",
+    Var: "hype.Var",
+    WaitGrouper: "hype.WaitGrouper",
+};
+let goerrors = {
+    CmdError: "hype.CmdError",
+    ErrAttrEmpty: "hype.ErrAttrEmpty",
+    ErrAttrNotFound: "hype.ErrAttrNotFound",
+    ErrIsNil: "hype.ErrIsNil",
+    ExecuteError: "hype.ExecuteError",
+    ParseError: "hype.ParseError",
+    PostExecuteError: "hype.PostExecuteError",
+    PostParseError: "hype.PostParseError",
+    PreExecuteError: "hype.PreExecuteError",
+    PreParseError: "hype.PreParseError",
 };
 
 class Element {
@@ -141,6 +177,44 @@ class Document extends Element {
     }
 }
 
+class ExecuteError {
+    constructor(data, parser) {
+        this.filename = data.filename;
+        this.root = data.root;
+        parser = parser || new Parser();
+        this.error = parser.parseError(data.err);
+    }
+}
+
+class FencedCode extends Element {
+    constructor(fc) {
+        super(fc);
+        this.lang = fc.lang;
+    }
+}
+
+class FigCaption extends Element {
+    constructor(fc) {
+        super(fc);
+    }
+}
+
+class Figure extends Element {
+    constructor(f) {
+        super(f);
+        if (f.style === "") {
+            f.style = "listing";
+        }
+        if (f.pos < 1) {
+            f.pos = 1;
+        }
+        f.section_id ? f.section_id : 1;
+        this.pos = f.pos;
+        this.style = f.style;
+        this.section_id = f.section_id;
+    }
+}
+
 class Heading extends Element {
     constructor(n) {
         super(n);
@@ -149,6 +223,31 @@ class Heading extends Element {
         this.level = n.level;
         if (this.level < 1)
             this.level = 1;
+    }
+}
+
+class Image extends Element {
+    constructor(img) {
+        super(img);
+    }
+}
+
+class Include extends Element {
+    constructor(el) {
+        super(el);
+        this.dir = el.dir;
+    }
+}
+
+class InlineCode extends Element {
+    constructor(t) {
+        super(t);
+    }
+}
+
+class LI extends Element {
+    constructor(li) {
+        super(li);
     }
 }
 
@@ -554,149 +653,6 @@ function NewLink(url, attrs) {
     });
 }
 
-function VisitAtom(atom, n, fn) {
-    var _a;
-    if (n === undefined) {
-        return;
-    }
-    (_a = n.nodes) === null || _a === void 0 ? void 0 : _a.forEach((e) => {
-        VisitAtom(atom, e, fn);
-    });
-    let atoms = [];
-    if (Array.isArray(atom)) {
-        atoms = atom;
-    }
-    else {
-        atoms.push(atom);
-    }
-    atoms.forEach((a) => {
-        if (a === n.atom) {
-            fn(n);
-        }
-    });
-    return;
-}
-
-class Toc extends Element {
-    constructor() {
-        super({
-            nodes: [],
-            atom: atoms.Ul,
-            type: gotypes.UL,
-            attributes: {
-                class: "hype-toc",
-            }
-        });
-        this.ids = [];
-        this.nodes = [];
-    }
-    perform(doc, gen) {
-        VisitAtom(atoms.Headings, doc, (n) => {
-            let h = new Heading(n);
-            // this.headings.push(h);
-            let id = gen ? gen() : newUUID();
-            this.ids.push(id);
-            let a = NewLink(`#${id}`);
-            let li = NewElement(atoms.Li, { class: `hype-toc-lvl-${h.level}` });
-            a.nodes = h.nodes;
-            li.nodes = [a];
-            this.nodes.push(li);
-            let nodes = n.nodes;
-            let b = NewElement(atoms.A);
-            b.attributes = { name: id };
-            n.nodes = [b, ...nodes];
-        });
-    }
-}
-function newUUID() {
-    return `heading-${v4()}`;
-}
-
-class CmdError {
-    constructor(data, parser) {
-        this.args = data.args;
-        this.env = data.env;
-        this.exit = data.exit;
-        this.filename = data.filename;
-        this.output = data.output;
-        this.root = data.root;
-        parser = parser || new Parser();
-        this.err = parser.parseError(data.err);
-    }
-}
-// args: [ 'ech', 'Hello World' ],
-// env: [
-// ],
-// err: 'exec: "ech": executable file not found in $PATH',
-// exit: -1,
-// filename: 'usage.md',
-// output: '',
-// root: '/Users/markbates/Library/CloudStorage/Dropbox/dev/guides/hypeviewer',
-// type: 'hype.CmdError'
-
-class ExecuteError {
-    constructor(data, parser) {
-        this.filename = data.filename;
-        this.root = data.root;
-        parser = parser || new Parser();
-        this.err = parser.parseError(data.err);
-    }
-}
-
-class FencedCode extends Element {
-    constructor(fc) {
-        super(fc);
-        this.lang = fc.lang;
-    }
-}
-
-class FigCaption extends Element {
-    constructor(fc) {
-        super(fc);
-    }
-}
-
-class Figure extends Element {
-    constructor(f) {
-        super(f);
-        if (f.style === "") {
-            f.style = "listing";
-        }
-        if (f.pos < 1) {
-            f.pos = 1;
-        }
-        f.section_id ? f.section_id : 1;
-        this.pos = f.pos;
-        this.style = f.style;
-        this.section_id = f.section_id;
-    }
-}
-
-class Image extends Element {
-    constructor(img) {
-        super(img);
-    }
-}
-
-class Include extends Element {
-    constructor(el) {
-        super(el);
-        this.dir = el.dir;
-    }
-}
-
-class InlineCode extends Element {
-    constructor(t) {
-        super(t);
-    }
-}
-
-class LI extends Element {
-    constructor(li) {
-        super(li);
-    }
-}
-
 class OL extends Element {
     constructor(ol) {
         super(ol);
@@ -714,7 +670,7 @@ class ParseError {
         this.filename = data.filename;
         this.root = data.root;
         parser = parser || new Parser();
-        this.err = parser.parseError(data.err);
+        this.error = parser.parseError(data.err);
     }
 }
 
@@ -786,35 +742,40 @@ function NewUL(attrs) {
     });
 }
 
+class PostParseError {
+    constructor(data, parser) {
+        this.filename = data.filename;
+        this.postparser = data.postparser;
+        this.root = data.root;
+        this.type = data.type;
+        parser = parser || new Parser();
+        this.error = parser.parseError(data.error);
+        this.orig_error = parser.parseError(data.orig_error);
+    }
+}
+
 class Parser {
     constructor() {
         this.handlers = {};
-        this.handlers[gotypes.Body] = newElement;
-        this.handlers[gotypes.Element] = newElement;
-        this.handlers[gotypes.Paragraph] = newElement;
-        this.handlers[gotypes.TD] = newElement;
-        this.handlers[gotypes.TH] = newElement;
-        this.handlers[gotypes.THead] = newElement;
-        this.handlers[gotypes.TR] = newElement;
-        this.handlers[gotypes.CmdResult] = (n) => new CmdResult(n);
-        this.handlers[gotypes.Cmd] = (n) => new Cmd(n);
-        this.handlers[gotypes.FencedCode] = (n) => new FencedCode(n);
-        this.handlers[gotypes.Figcaption] = (n) => new FigCaption(n);
-        this.handlers[gotypes.Figure] = (n) => new Figure(n);
-        this.handlers[gotypes.Heading] = (n) => new Heading(n);
-        this.handlers[gotypes.Image] = (n) => new Image(n);
-        this.handlers[gotypes.Include] = (n) => new Include(n);
-        this.handlers[gotypes.InlineCode] = (n) => new InlineCode(n);
-        this.handlers[gotypes.LI] = (n) => new LI(n);
-        this.handlers[gotypes.Link] = (n) => new Link(n);
-        this.handlers[gotypes.OL] = (n) => new OL(n);
-        this.handlers[gotypes.Page] = (n) => new Page(n);
-        this.handlers[gotypes.Ref] = (n) => new Ref(n);
-        this.handlers[gotypes.Snippet] = (n) => new Snippet(n);
-        this.handlers[gotypes.SourceCode] = (n) => new SourceCode(n);
-        this.handlers[gotypes.Table] = (n) => new Table(n);
-        this.handlers[gotypes.Text] = (n) => new Text(n);
-        this.handlers[gotypes.UL] = (n) => new UL(n);
+        this.handlers[gotypes.CmdResult] = (n) => [new CmdResult(n)];
+        this.handlers[gotypes.Cmd] = (n) => [new Cmd(n)];
+        this.handlers[gotypes.FencedCode] = (n) => [new FencedCode(n)];
+        this.handlers[gotypes.Figcaption] = (n) => [new FigCaption(n)];
+        this.handlers[gotypes.Figure] = (n) => [new Figure(n)];
+        this.handlers[gotypes.Heading] = (n) => [new Heading(n)];
+        this.handlers[gotypes.Image] = (n) => [new Image(n)];
+        this.handlers[gotypes.Include] = (n) => [new Include(n)];
+        this.handlers[gotypes.InlineCode] = (n) => [new InlineCode(n)];
+        this.handlers[gotypes.LI] = (n) => [new LI(n)];
+        this.handlers[gotypes.Link] = (n) => [new Link(n)];
+        this.handlers[gotypes.OL] = (n) => [new OL(n)];
+        this.handlers[gotypes.Page] = (n) => [new Page(n)];
+        this.handlers[gotypes.Ref] = (n) => [new Ref(n)];
+        this.handlers[gotypes.Snippet] = (n) => [new Snippet(n)];
+        this.handlers[gotypes.SourceCode] = (n) => [new SourceCode(n)];
+        this.handlers[gotypes.Table] = (n) => [new Table(n)];
+        this.handlers[gotypes.Text] = (n) => [new Text(n)];
+        this.handlers[gotypes.UL] = (n) => [new UL(n)];
     }
     parse(data) {
         data = structuredClone(data);
@@ -823,17 +784,25 @@ class Parser {
     }
     parseError(data) {
         switch (data.type) {
-            case gotypes.ExecuteError:
+            case goerrors.ExecuteError:
                 return new ExecuteError(data, this);
-            case gotypes.CmdError:
+            case goerrors.CmdError:
                 return new CmdError(data, this);
-            case gotypes.ParseError:
+            case goerrors.ParseError:
                 return new ParseError(data, this);
+            case goerrors.PostParseError:
+                return new PostParseError(data, this);
+            case goerrors.PostExecuteError:
+                throw new Error("not implemented: " + data.type);
+            case goerrors.PreExecuteError:
+                throw new Error("not implemented: " + data.type);
+            case goerrors.PreParseError:
+                throw new Error("not implemented: " + data.type);
             default:
                 if (data.type === undefined) {
                     return data;
                 }
-                console.warn("parseError: unknown type: ", data.type);
+                // console.warn("parseError: unknown type: ", data.type)
                 return data;
         }
     }
@@ -851,17 +820,97 @@ class Parser {
                 n.nodes = this.parseNodes(n.nodes);
                 let fn = this.handlers[n.type];
                 if (fn === undefined) {
-                    console.warn("unknown node type: " + n.type);
+                    // console.warn("unknown node type: " + n.type)
                     fn = newElement;
                 }
-                ret.push(fn(n));
+                ret.push(...fn(n));
             }
         });
         return ret;
     }
 }
 function newElement(n) {
-    return new Element(n);
+    return [new Element(n)];
+}
+
+class CmdError {
+    constructor(data, parser) {
+        this.args = data.args;
+        this.env = data.env;
+        this.exit = data.exit;
+        this.filename = data.filename;
+        this.output = data.output;
+        this.root = data.root;
+        parser = parser || new Parser();
+        this.error = parser.parseError(data.err);
+    }
+}
+// args: [ 'ech', 'Hello World' ],
+// env: [
+// ],
+// err: 'exec: "ech": executable file not found in $PATH',
+// exit: -1,
+// filename: 'usage.md',
+// output: '',
+// root: '/Users/markbates/Library/CloudStorage/Dropbox/dev/guides/hypeviewer',
+// type: 'hype.CmdError'
+
+function VisitAtom(atom, n, fn) {
+    var _a;
+    if (n === undefined) {
+        return;
+    }
+    (_a = n.nodes) === null || _a === void 0 ? void 0 : _a.forEach((e) => {
+        VisitAtom(atom, e, fn);
+    });
+    let atoms = [];
+    if (Array.isArray(atom)) {
+        atoms = atom;
+    }
+    else {
+        atoms.push(atom);
+    }
+    atoms.forEach((a) => {
+        if (a === n.atom) {
+            fn(n);
+        }
+    });
+    return;
+}
+
+class Toc extends Element {
+    constructor() {
+        super({
+            nodes: [],
+            atom: atoms.Ul,
+            type: gotypes.UL,
+            attributes: {
+                class: "hype-toc",
+            }
+        });
+        this.ids = [];
+        this.nodes = [];
+    }
+    perform(doc, gen) {
+        VisitAtom(atoms.Headings, doc, (n) => {
+            let h = new Heading(n);
+            // this.headings.push(h);
+            let id = gen ? gen() : newUUID();
+            this.ids.push(id);
+            let a = NewLink(`#${id}`);
+            let li = NewElement(atoms.Li, { class: `hype-toc-lvl-${h.level}` });
+            a.nodes = h.nodes;
+            li.nodes = [a];
+            this.nodes.push(li);
+            let nodes = n.nodes;
+            let b = NewElement(atoms.A);
+            b.attributes = { name: id };
+            n.nodes = [b, ...nodes];
+        });
+    }
+}
+function newUUID() {
+    return `heading-${v4()}`;
 }
 
 class Module {
@@ -947,4 +996,4 @@ class Modules {
     }
 }
 
-export { Cmd, CmdResult, Document, Element, EmptyModule, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, Modules, NewElement, NewLink, NewText, NewUL, OL, Page, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, atoms, gotypes };
+export { Cmd, CmdError, CmdResult, Document, Element, EmptyModule, ExecuteError, FencedCode, FigCaption, Figure, Heading, Image, Include, InlineCode, LI, Link, Module, Modules, NewElement, NewLink, NewText, NewUL, OL, Page, ParseError, Parser, Ref, Snippet, SourceCode, Table, Text, Toc, UL, VisitAtom, atoms, gotypes };

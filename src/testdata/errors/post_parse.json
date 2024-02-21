@@ -1,0 +1,8 @@
+{
+    "error": "error post parsing",
+    "filename": "module.md",
+    "orig_error": "original error",
+    "postparser": "\u003cnil\u003e",
+    "root": "testdata/whole/simple",
+    "type": "hype.PostParseError"
+}

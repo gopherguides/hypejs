@@ -6,7 +6,7 @@ import { Toc } from "./toc"
 
 describe('module', () => {
 
-    let data = require("./testdata/context.json")
+    let data = require("./testdata/12-context.json")
 
     test("should parse", () => {
         let mod: Module = new Module(data)

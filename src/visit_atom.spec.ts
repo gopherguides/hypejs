@@ -9,7 +9,7 @@ import { Parser } from "./parser";
 describe('visitAtom', () => {
 
     let p: Parser = new Parser();
-    let data = require("./testdata/errors.json")
+    let data = require("./testdata/09-errors.json")
 
     describe('errors doc', () => {
 

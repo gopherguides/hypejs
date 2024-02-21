@@ -4,6 +4,6 @@ export class ExecuteError {
         this.filename = data.filename;
         this.root = data.root;
         parser = parser || new Parser();
-        this.err = parser.parseError(data.err);
+        this.error = parser.parseError(data.err);
     }
 }

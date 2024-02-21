@@ -2,7 +2,7 @@ import { Parser } from "./parser";
 export declare class CmdError {
     args: string[];
     env: string[];
-    err: any;
+    error: any;
     exit: number;
     filename: string;
     output: string;

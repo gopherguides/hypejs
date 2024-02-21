@@ -6,13 +6,13 @@ import { Parser } from "./parser";
 export class ParseError {
     filename: string;
     root: string;
-    err: any;
+    error: any;
 
     constructor(data: any, parser?: Parser) {
         this.filename = data.filename;
         this.root = data.root;
 
         parser = parser || new Parser();
-        this.err = parser.parseError(data.err);
+        this.error = parser.parseError(data.err);
     }
 }

@@ -1,13 +1,19 @@
 dev: build
 	npm run test:dev
 
-build: clean
+gotypes:
+	go run ./cmd/gotypes
+
+gentestdata:
+	go run ./cmd/gentestdata
+
+build: clean gotypes
 	npm run build
 
 clean:
 	rm -rf dist
 
-test: build
+test: build gentestdata
 	npm run test
 
 publish: test
